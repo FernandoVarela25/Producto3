@@ -4,6 +4,7 @@
     require_once 'Connection.php';
     use Laminas\Soap\AutoDiscover;
     use Laminas\Db\Adapter\Adapter;
+
     class NovenoCDB {
         /**
             * @param int $Id  
@@ -134,6 +135,54 @@
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
             if ($Result){
                 return "Insercion Correcta";
+            }
+        }
+        /**
+            * @param int $Id
+            * @return string
+        */
+        function DelAlumno($Id) {
+            $connection = getDB();
+            $query = "DELETE FROM Alumnos WHERE idAlumnos = $Id";
+            $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
+            if ($Result){
+                return "Se ha eliminado al alumno";
+            }
+        }
+        /**
+            * @param int $Id
+            * @return string
+        */
+        function DelClase($Id) {
+            $connection = getDB();
+            $query = "DELETE FROM Clases WHERE idClases = $Id";
+            $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
+            if ($Result){
+                return "Se ha eliminado la clase";
+            }
+        }
+        /**
+            * @param int $Id
+            * @return bool
+        */
+        function DelMateria($Id) {
+            $connection = getDB();
+            $query = "DELETE FROM Materias WHERE idMaterias = $Id";
+            $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
+            if ($Result){
+                return "Se ha eliminado la materia";
+            }
+        }
+        /**
+            * @param int $Id
+            * @return string
+        */
+        function DelAsistencia($Id) {
+            $connection = getDB();
+            $query = "DELETE FROM Asistencias WHERE idAsistencias = $Id";
+            $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
+            if ($Result){
+                return "Se ha eliminado la asistencia";
             }
         }
         /**
