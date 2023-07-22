@@ -136,6 +136,39 @@
                 return "Insercion Correcta";
             }
         }
+        /**
+         * @param int $Id
+         * @param string $Date
+         * @return array
+         */
+        function PorcentajeAsistenciaXMes($Id,$Date){
+            $connection = getDB();
+            switch($Date){
+                case 'Mayo':
+                    $query = "SELECT (COUNT(A.Asistencia) / 21 * 100) AS PorcentajeAsistencias
+                            FROM NovenoC.Asistencias AS A
+                            INNER JOIN NovenoC.Clases AS C ON A.FK_idClases = C.idClases
+                            WHERE C.Fecha BETWEEN '2023-05-01' AND '2023-05-31' AND A.FK_idAlumnos = $Id;";
+                    break;
+                case 'Junio':
+                    $query = "SELECT (COUNT(A.Asistencia) / 21 * 100) AS PorcentajeAsistencias
+                            FROM NovenoC.Asistencias AS A
+                            INNER JOIN NovenoC.Clases AS C ON A.FK_idClases = C.idClases
+                            WHERE C.`Fecha` BETWEEN '2023-06-01' AND '2023-06-30' AND A.FK_idAlumnos = $Id;";
+                    break;
+                case 'Julio':
+                    $query = "SELECT (COUNT(A.Asistencia) / 21 * 100) AS Porcentaje_Asistencias
+                            FROM NovenoC.Asistencias AS A
+                            INNER JOIN NovenoC.Clases AS C ON A.FK_idClases = C.idClases
+                            WHERE C.Fecha BETWEEN '2023-07-01' AND '2023-07-31' AND A.FK_idAlumnos = $Id;";
+                    break;
+                default:
+                    throw new Exception('La inserciÃ³n de los valores es incorrecta');
+                break;
+            }
+            $Result = $connection -> query ($query,Adapter::QUERY_MODE_EXECUTE);
+            return $Result -> toArray();
+        }
     }
     $wsdl = (new AutoDiscover())
         ->setClass(NovenoCDB::class)
