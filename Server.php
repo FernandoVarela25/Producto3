@@ -15,7 +15,7 @@
             $query = "update Materias set Nombre='$Name' where idMaterias=$Id";
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
             if($Result){
-                return "Tabla actualizada!";
+                return "Tabla Materias actualizada!";
             }
         }
         /**
@@ -28,7 +28,7 @@
             $query = "update Alumnos set Nombre='$Name' where idAlumnos=$Id";
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
             if($Result){
-                return "Tabla actualizada!";
+                return "Tabla Alumnos actualizada!";
             }
         }
         /**
@@ -41,7 +41,7 @@
             $query = "update Alumnos set ApePaterno='$FirstName' where idAlumnos=$Id";
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
             if($Result){
-                return "Tabla actualizada!";
+                return "Tabla Alumnos actualizada!";
             }
         }
         /**
@@ -54,7 +54,7 @@
             $query = "update Alumnos set ApeMaterno='$LastName' where idAlumnos=$Id";
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
             if($Result){
-                return "Tabla actualizada!";
+                return "Tabla Alumnos actualizada!";
             }
         }
         /**
@@ -67,7 +67,7 @@
             $query = "update Clases set Fecha='$Date' where idClases=$Id";
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
             if($Result){
-                return "Tabla actualizada!";
+                return "Tabla Clases actualizada!";
             }
         }
         /**
@@ -80,7 +80,7 @@
             $query = "update Asistencias set Asistencia='$Asistencia' where idAsistencias=$Id";
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
             if($Result){
-                return "Tabla actualizada!";
+                return "Tabla Asistencias actualizada!";
             }
         }
         /**
@@ -137,37 +137,61 @@
             }
         }
         /**
-         * @param int $Id
-         * @param string $Date
-         * @return array
-         */
-        function PorcentajeAsistenciaXMes($Id,$Date){
+            * @param string $option
+            * @return string
+        */
+        function selection($option) {
             $connection = getDB();
-            switch($Date){
-                case 'Mayo':
-                    $query = "SELECT (COUNT(A.Asistencia) / 21 * 100) AS PorcentajeAsistencias
-                            FROM NovenoC.Asistencias AS A
-                            INNER JOIN NovenoC.Clases AS C ON A.FK_idClases = C.idClases
-                            WHERE C.Fecha BETWEEN '2023-05-01' AND '2023-05-31' AND A.FK_idAlumnos = $Id;";
+            $query1 = "SELECT (SUM(Asistencias.Asistencia) / 441 * 100) AS Porcentaje_Asistencias
+                    FROM Asistencias
+                    JOIN Clases ON Asistencias.FK_idClases = Clases.idClases
+                    WHERE Clases.Fecha >= '2023-05-01' AND Clases.Fecha <= '2023-05-31';";
+            $statement = $connection->query($query1, Adapter::QUERY_MODE_EXECUTE);
+            $resultSet = $statement->current();
+            $Mayo = (float) $resultSet['Porcentaje_Asistencias'];
+
+            $query2 = "SELECT (SUM(Asistencias.Asistencia) / 462 * 100) AS Porcentaje_Asistencias
+                    FROM Asistencias
+                    JOIN Clases ON Asistencias.FK_idClases = Clases.idClases
+                    WHERE Clases.Fecha >= '2023-06-01' AND Clases.Fecha <= '2023-06-30';";
+            $statement = $connection->query($query2, Adapter::QUERY_MODE_EXECUTE);
+            $resultSet = $statement->current();
+            $Junio = (float) $resultSet['Porcentaje_Asistencias'];
+
+            $query3 = "SELECT (SUM(Asistencias.Asistencia) / 168 * 100) AS Porcentaje_Asistencias
+                    FROM Asistencias
+                    JOIN Clases ON Asistencias.FK_idClases = Clases.idClases
+                    WHERE Clases.Fecha >= '2023-07-01' AND Clases.Fecha <= '2023-07-31';";
+            $statement = $connection->query($query3, Adapter::QUERY_MODE_EXECUTE);
+            $resultSet = $statement->current();
+            $Julio = (float) $resultSet['Porcentaje_Asistencias'];
+
+            switch($option){
+                case "Mayor":
+                    if ($Mayo >= $Junio && $Mayo >= $Julio) {
+                        return "El mes con mayor porcentaje de asistencias es: Mayo ";
+                    } 
+                    if($Junio >= $Mayo && $Junio >= $Julio) {
+                        return "El mes con mayor porcentaje de asistencias es: Junio";
+                    } 
+                    if($Julio >= $Mayo && $Julio >= $Junio) {
+                        return "El mes con mayor porcentaje de asistencias es: Julio";
+                    }
                     break;
-                case 'Junio':
-                    $query = "SELECT (COUNT(A.Asistencia) / 21 * 100) AS PorcentajeAsistencias
-                            FROM NovenoC.Asistencias AS A
-                            INNER JOIN NovenoC.Clases AS C ON A.FK_idClases = C.idClases
-                            WHERE C.`Fecha` BETWEEN '2023-06-01' AND '2023-06-30' AND A.FK_idAlumnos = $Id;";
+                case "Menor":
+                    if ($Mayo <= $Junio && $Mayo <= $Julio) {
+                        return "El mes con menor porcentaje de asistencias es: Mayo";
+                    } 
+                    if ($Junio <= $Mayo && $Junio <= $Julio) {
+                        return "El mes con menor porcentaje de asistencias es: Junio";
+                    } 
+                    if ($Julio <= $Mayo && $Julio <= $Junio) {
+                        return "El mes con menor porcentaje de asistencias es: Julio";
+                    }
                     break;
-                case 'Julio':
-                    $query = "SELECT (COUNT(A.Asistencia) / 21 * 100) AS Porcentaje_Asistencias
-                            FROM NovenoC.Asistencias AS A
-                            INNER JOIN NovenoC.Clases AS C ON A.FK_idClases = C.idClases
-                            WHERE C.Fecha BETWEEN '2023-07-01' AND '2023-07-31' AND A.FK_idAlumnos = $Id;";
-                    break;
-                default:
-                    throw new Exception('La inserciÃ³n de los valores es incorrecta');
-                break;
+                default: 
+                return "Opcion invalida";
             }
-            $Result = $connection -> query ($query,Adapter::QUERY_MODE_EXECUTE);
-            return $Result -> toArray();
         }
     }
     $wsdl = (new AutoDiscover())
