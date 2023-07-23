@@ -1,21 +1,61 @@
 <?php
-    const SERVER_URI = 'http://localhost/producto3/Server.php';
+    const SERVER_URI = 'http://localhost/Producto3/Server.php';
     require_once 'vendor/autoload.php';
     require_once 'Connection.php';
     use Laminas\Soap\AutoDiscover;
     use Laminas\Db\Adapter\Adapter;
     class NovenoCDB {
+        /** 
+            * @param string $Name
+            * @param string $FirstName
+            * @param string $LastName
+            * @return string
+        */
+        function InsAlumno($Name,$FirstName,$LastName){
+            $connection = getDB();
+            $query = "insert into Alumnos(Nombre,ApePaterno,ApeMaterno) values ('$Name','$FirstName','$LastName')";
+            $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
+            if ($Result){
+                return "Alumno insertado con exito";
+            }
+        }
+        /** 
+            *@param int $Attendance
+            *@param int $FK_IdAlumnos
+            *@param int $FK_IdClases
+            *@param int $FK_IdMaterias
+            * @return string
+        */
+        function InsAsistencia($Attendance,$FK_IdAlumnos,$FK_IdClases,$FK_IdMaterias){
+            $connection = getDB();
+            $query = "INSERT INTO Asistencias(Asistencia,FK_idAlumnos,FK_idClases,FK_idMaterias) VALUES ($Attendance,$FK_IdAlumnos,$FK_IdClases,$FK_IdMaterias);";
+            $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
+            if ($Result){
+                return "Asistencia insertada con exito";
+            }
+        }
+        /** 
+            * @param string $Date
+            * @return string
+        */
+        function InsClase($Date){
+            $connection = getDB();
+            $query = "insert into Clases(Fecha) values ('$Date')";
+            $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
+            if ($Result){
+                return "Clase insertada con exito";
+            }
+        }
         /**
-            * @param int $Id  
             * @param string $Name
             * @return string
         */
-        function ActMateria($Id, $Name){
+        function InsMateria($Name) {
             $connection = getDB();
-            $query = "update Materias set Nombre='$Name' where idMaterias=$Id";
+            $query = "insert into Materias(Nombre) values ('$Name')";
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
-            if($Result){
-                return "Tabla Materias actualizada!";
+            if ($Result){
+                return "Materia insertada con exito";
             }
         }
         /**
@@ -28,7 +68,7 @@
             $query = "update Alumnos set Nombre='$Name' where idAlumnos=$Id";
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
             if($Result){
-                return "Tabla Alumnos actualizada!";
+                return "Nombre del alumno actualizado!";
             }
         }
         /**
@@ -41,7 +81,7 @@
             $query = "update Alumnos set ApePaterno='$FirstName' where idAlumnos=$Id";
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
             if($Result){
-                return "Tabla Alumnos actualizada!";
+                return "Apellido paterno actualizado!";
             }
         }
         /**
@@ -54,20 +94,7 @@
             $query = "update Alumnos set ApeMaterno='$LastName' where idAlumnos=$Id";
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
             if($Result){
-                return "Tabla Alumnos actualizada!";
-            }
-        }
-        /**
-            * @param int $Id  
-            * @param string $Date
-            * @return string
-        */
-        function ActClases($Id, $Date){
-            $connection = getDB();
-            $query = "update Clases set Fecha='$Date' where idClases=$Id";
-            $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
-            if($Result){
-                return "Tabla Clases actualizada!";
+                return "Apellido materno actualizado!";
             }
         }
         /**
@@ -80,67 +107,40 @@
             $query = "update Asistencias set Asistencia='$Asistencia' where idAsistencias=$Id";
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
             if($Result){
-                return "Tabla Asistencias actualizada!";
+                return "Asistencia actualizada!";
             }
         }
         /**
-            * @param string $Name
-            * @return string
-        */
-        function InsMaterias($Name) {
-            $connection = getDB();
-            $query = "insert into Materias(Nombre) values ('$Name')";
-            $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
-            if ($Result){
-                return "Insercion Correcta";
-            }
-        }
-        /** 
+            * @param int $Id  
             * @param string $Date
             * @return string
         */
-        function InsClases($Date){
+        function ActClase($Id, $Date){
             $connection = getDB();
-            $query = "insert into Clases(Fecha) values ('$Date')";
+            $query = "update Clases set Fecha='$Date' where idClases=$Id";
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
-            if ($Result){
-                return "Insercion Correcta";
+            if($Result){
+                return "Fecha de la clase actualizada!";
             }
         }
-        /** 
+        /**
+            * @param int $Id  
             * @param string $Name
-            * @param string $FirstName
-            * @param string $LastName
             * @return string
         */
-        function InsAlumnos($Name,$FirstName,$LastName){
+        function ActMateria($Id, $Name){
             $connection = getDB();
-            $query = "insert into Alumnos(Nombre,ApePaterno,ApeMaterno) values ('$Name','$FirstName','$LastName')";
+            $query = "update Materias set Nombre='$Name' where idMaterias=$Id";
             $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
-            if ($Result){
-                return "Insercion Correcta";
-            }
-        }
-        /** 
-            *@param int $Attendance
-            *@param int $FK_IdAlumnos
-            *@param int $FK_IdClases
-            *@param int $FK_IdMaterias
-            * @return string
-        */
-        function InsAsistencias($Attendance,$FK_IdAlumnos,$FK_IdClases,$FK_IdMaterias){
-            $connection = getDB();
-            $query = "INSERT INTO Asistencias(Asistencia,FK_idAlumnos,FK_idClases,FK_idMaterias) VALUES ($Attendance,$FK_IdAlumnos,$FK_IdClases,$FK_IdMaterias);";
-            $Result = $connection->query($query, Adapter::QUERY_MODE_EXECUTE);
-            if ($Result){
-                return "Insercion Correcta";
+            if($Result){
+                return "Materia actualizada!";
             }
         }
         /**
             * @param string $option
             * @return string
         */
-        function selection($option) {
+        function MesConMasMenosPorcentajeAsistencias($option) {
             $connection = getDB();
             $query1 = "SELECT (SUM(Asistencias.Asistencia) / 441 * 100) AS Porcentaje_Asistencias
                     FROM Asistencias
@@ -168,26 +168,14 @@
 
             switch($option){
                 case "Mayor":
-                    if ($Mayo >= $Junio && $Mayo >= $Julio) {
-                        return "El mes con mayor porcentaje de asistencias es: Mayo ";
-                    } 
-                    if($Junio >= $Mayo && $Junio >= $Julio) {
-                        return "El mes con mayor porcentaje de asistencias es: Junio";
-                    } 
-                    if($Julio >= $Mayo && $Julio >= $Junio) {
-                        return "El mes con mayor porcentaje de asistencias es: Julio";
-                    }
+                    if($Mayo >= $Junio && $Mayo >= $Julio){return "El mes con mayor porcentaje de asistencias es: Mayo";}
+                    if($Junio >= $Mayo && $Junio >= $Julio){return "El mes con mayor porcentaje de asistencias es: Junio";}
+                    if($Julio >= $Mayo && $Julio >= $Junio){return "El mes con mayor porcentaje de asistencias es: Julio";}
                     break;
                 case "Menor":
-                    if ($Mayo <= $Junio && $Mayo <= $Julio) {
-                        return "El mes con menor porcentaje de asistencias es: Mayo";
-                    } 
-                    if ($Junio <= $Mayo && $Junio <= $Julio) {
-                        return "El mes con menor porcentaje de asistencias es: Junio";
-                    } 
-                    if ($Julio <= $Mayo && $Julio <= $Junio) {
-                        return "El mes con menor porcentaje de asistencias es: Julio";
-                    }
+                    if($Mayo <= $Junio && $Mayo <= $Julio){return "El mes con menor porcentaje de asistencias es: Mayo";}
+                    if($Junio <= $Mayo && $Junio <= $Julio){return "El mes con menor porcentaje de asistencias es: Junio";}
+                    if($Julio <= $Mayo && $Julio <= $Junio){return "El mes con menor porcentaje de asistencias es: Julio";}
                     break;
                 default: 
                 return "Opcion invalida";
