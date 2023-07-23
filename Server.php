@@ -231,6 +231,7 @@
             }
         }
     }
+    
     $wsdl = (new AutoDiscover())
         ->setClass(NovenoCDB::class)
         ->setUri(SERVER_URI)
